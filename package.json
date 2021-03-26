@@ -1,0 +1,27 @@
+{
+  "name": "nlw-05-jobscalc",
+  "version": "1.0.0",
+  "description": "JobCalc - Calculadora para Freelancers",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "nodemon .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dhsanchesp/nlw-05-jobscalc.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dhsanchesp/nlw-05-jobscalc/issues"
+  },
+  "homepage": "https://github.com/dhsanchesp/nlw-05-jobscalc#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
