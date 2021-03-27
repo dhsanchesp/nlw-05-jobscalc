@@ -1,7 +1,7 @@
 {
   "name": "nlw-05-jobscalc",
   "version": "1.0.0",
-  "description": "JobCalc - Calculadora para Freelancers",
+  "description": "JobCalc - Calculadora para Freelancers.",
   "main": "src/server.js",
   "scripts": {
     "dev": "nodemon .",
