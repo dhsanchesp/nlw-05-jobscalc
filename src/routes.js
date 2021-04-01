@@ -49,6 +49,7 @@ const Job = {
       name: "Pizzaria Guloso",
       "daily-hours": 2,
       "total-hours": 1,
+      budget: 4500,
       created_at: Date.now(),
     },
     {
@@ -56,6 +57,7 @@ const Job = {
       name: "OneTwo Project",
       "daily-hours": 3,
       "total-hours": 47,
+      budget: 4500,
       created_at: Date.now(),
     }
   ],
@@ -69,11 +71,11 @@ const Job = {
             ...job,
             remaining,
             status,
-            budget: Profile.data["value-hour"] * job["total-hours"]
+            budget: Job.services.calculateBudget(job, Profile.data["value-hour"])
           }
         })
 
-        return res.render(`${views}index`, { jobs: updatedJobs })
+        return res.render(`${views}index`, { jobs: updatedJobs, profile: Profile.data })
       },
       
       create(req, res) {
@@ -94,7 +96,16 @@ const Job = {
       },
       
       update(req, res) {
-        return res.render(`${views}job-edit`)
+        const jobId = req.params.id;
+
+        const job = Job.data.find(item => Number(item.id) === Number(jobId));
+        if (!job) {
+          return res.send(`Job with ID[${jobId}] not found`)  
+        }
+
+        job.budget = Job.services.calculateBudget(job, Profile.data["value-hour"])
+
+        return res.render(`${views}job-edit`, { job })
       }
   },
   services: {
@@ -112,6 +123,9 @@ const Job = {
       const differenceInDays = Math.floor(timeDiffInMs / dayInMs)
 
       return differenceInDays;
+    },
+    calculateBudget(job, valueHour) {
+      return valueHour * job["total-hours"]
     }
   },
 }
@@ -119,7 +133,7 @@ const Job = {
 routes.get('/', Job.controllers.index)
 routes.get('/job', Job.controllers.create)
 routes.post('/job', Job.controllers.save)
-routes.get('/job/edit', Job.controllers.update)
+routes.get('/job/:id', Job.controllers.update)
 routes.get('/profile', Profile.controllers.index)
 routes.post('/profile', Profile.controllers.update)
 
