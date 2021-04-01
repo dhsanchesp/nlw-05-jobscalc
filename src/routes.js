@@ -29,45 +29,51 @@ const jobs = [{
   }
 ]
 
-function remainingDays(job) {
-  const remaining = (job["total-hours"] / job["daily-hours"]).toFixed()
+const Job = {
+  controllers: {
+      index(req, res) {
+        const updatedJobs = jobs.map((job) => {
+          const remaining = Job.services.remainingDays(job)
+          const status = remaining <= 0 ? "done" : "progress"
+      
+          return {
+            ...job,
+            remaining,
+            status,
+            budget: profile["value-hour"] * job["total-hours"]
+          }
+        })
 
-  const createdDate = new Date(job.created_at)
-  const dueDay = createdDate.getDate() + Number(remaining)
-  const dueDateInMs = createdDate.setDate(dueDay) 
+        return res.render(`${views}index`, { jobs: updatedJobs })
+      },
+  },
+  services: {
+    remainingDays(job) {
+      const remaining = (job["total-hours"] / job["daily-hours"]).toFixed()
 
-  const timeDiffInMs = dueDateInMs - Date.now()
-  
-  // transformar milliseconds em dias
-  const dayInMs = 24 * 60 * 60 * 1000
-  const differenceInDays = Math.floor(timeDiffInMs / dayInMs)
+      const createdDate = new Date(job.created_at)
+      const dueDay = createdDate.getDate() + Number(remaining)
+      const dueDateInMs = createdDate.setDate(dueDay) 
 
-  return differenceInDays;
+      const timeDiffInMs = dueDateInMs - Date.now()
+      
+      // transformar milliseconds em dias
+      const dayInMs = 24 * 60 * 60 * 1000
+      const differenceInDays = Math.floor(timeDiffInMs / dayInMs)
+
+      return differenceInDays;
+    }
+  },
 }
 
-routes.get('/', (request, response) => {
-
-  const updatedJobs = jobs.map((job) => {
-    const remaining = remainingDays(job)
-    const status = remaining <= 0 ? "done" : "progress"
-
-    return {
-      ...job,
-      remaining,
-      status,
-      budget: profile["value-hour"] * job["total-hours"]
-    }
-  })
-  
-  return response.render(`${views}index`, { jobs: updatedJobs })
-})
+routes.get('/', Job.controllers.index)
 routes.get('/job', (request, response) => response.render(`${views}job`))
 routes.post('/job', (request, response) => {
 
   const lastId = jobs[jobs.length - 1].id || 1;
 
   jobs.push({
-    id: lastId,
+    id: lastId + 1,
     name: request.body.name,
     "daily-hours": request.body["daily-hours"],
     "total-hours": request.body["total-hours"],
