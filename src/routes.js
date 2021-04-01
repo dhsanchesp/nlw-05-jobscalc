@@ -3,7 +3,8 @@ const routes = express.Router()
 
 const views = `${__dirname}/views/`
 
-const profile = {
+const Profile = {
+  data: {
     name: "Daniel Sanches",
     avatar: "https://github.com/dhsanchesp.png",
     "monthly-budget": 5400,
@@ -11,6 +12,18 @@ const profile = {
     "hours-per-day": 5,
     "vacation-per-year": 4,
     "value-hour": 75
+  },
+
+  controllers: {
+    index(req, res) {
+      return res.render(`${views}profile`, { profile: Profile.data })
+    },
+
+    update(req, res) {
+      
+
+    }
+  }
 }
 
 const Job = {
@@ -40,15 +53,17 @@ const Job = {
             ...job,
             remaining,
             status,
-            budget: profile["value-hour"] * job["total-hours"]
+            budget: Profile.data["value-hour"] * job["total-hours"]
           }
         })
 
         return res.render(`${views}index`, { jobs: updatedJobs })
       },
+      
       create(req, res) {
         return res.render(`${views}job`)
       },
+      
       save(req, res) {
         const lastId = Job.data[Job.data.length - 1].id || 1;
 
@@ -61,6 +76,10 @@ const Job = {
         })
         return res.redirect('/')
       },
+      
+      update(req, res) {
+        return res.render(`${views}job-edit`)
+      }
   },
   services: {
     remainingDays(job) {
@@ -84,7 +103,8 @@ const Job = {
 routes.get('/', Job.controllers.index)
 routes.get('/job', Job.controllers.create)
 routes.post('/job', Job.controllers.save)
-routes.get('/job/edit', (request, response) => response.render(`${views}job-edit`))
-routes.get('/profile', (request, response) => response.render(`${views}profile`, { profile }))
+routes.get('/job/edit', Job.controllers.update)
+routes.get('/profile', Profile.controllers.index)
+routes.post('/profile', Profile.controllers.update)
 
 module.exports = routes
