@@ -95,7 +95,7 @@ const Job = {
         return res.redirect('/')
       },
       
-      update(req, res) {
+      findById(req, res) {
         const jobId = req.params.id;
 
         const job = Job.data.find(item => Number(item.id) === Number(jobId));
@@ -106,6 +106,32 @@ const Job = {
         job.budget = Job.services.calculateBudget(job, Profile.data["value-hour"])
 
         return res.render(`${views}job-edit`, { job })
+      },
+
+      update(req, res) {
+        const jobId = req.params.id;
+
+        const jobFound = Job.data.find(item => Number(item.id) === Number(jobId));
+        if (!jobFound) {
+          return res.send(`Job with ID[${jobId}] not found`)  
+        }
+
+        const updatedJob = {
+          ...jobFound,
+          name: req.body.name,
+          "daily-hours": req.body["daily-hours"],
+          "total-hours": req.body["total-hours"]
+        }
+
+        Job.data = Job.data.map(job => { 
+          if (Number(job.id) === Number(jobId)) {
+            job = updatedJob
+          }
+
+          return job
+        })
+
+        res.redirect(`/job/${jobId}`)
       }
   },
   services: {
@@ -133,7 +159,8 @@ const Job = {
 routes.get('/', Job.controllers.index)
 routes.get('/job', Job.controllers.create)
 routes.post('/job', Job.controllers.save)
-routes.get('/job/:id', Job.controllers.update)
+routes.get('/job/:id', Job.controllers.findById)
+routes.post('/job/:id', Job.controllers.update)
 routes.get('/profile', Profile.controllers.index)
 routes.post('/profile', Profile.controllers.update)
 
