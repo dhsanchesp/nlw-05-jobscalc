@@ -13,26 +13,26 @@ const profile = {
     "value-hour": 75
 }
 
-const jobs = [{
-    id: 1,
-    name: "Pizzaria Guloso",
-    "daily-hours": 2,
-    "total-hours": 1,
-    created_at: Date.now(),
-  },
-  {
-    id: 2,
-    name: "OneTwo Project",
-    "daily-hours": 3,
-    "total-hours": 47,
-    created_at: Date.now(),
-  }
-]
-
 const Job = {
+  data: [
+    {
+      id: 1,
+      name: "Pizzaria Guloso",
+      "daily-hours": 2,
+      "total-hours": 1,
+      created_at: Date.now(),
+    },
+    {
+      id: 2,
+      name: "OneTwo Project",
+      "daily-hours": 3,
+      "total-hours": 47,
+      created_at: Date.now(),
+    }
+  ],
   controllers: {
       index(req, res) {
-        const updatedJobs = jobs.map((job) => {
+        const updatedJobs = Job.data.map((job) => {
           const remaining = Job.services.remainingDays(job)
           const status = remaining <= 0 ? "done" : "progress"
       
@@ -45,6 +45,21 @@ const Job = {
         })
 
         return res.render(`${views}index`, { jobs: updatedJobs })
+      },
+      create(req, res) {
+        return res.render(`${views}job`)
+      },
+      save(req, res) {
+        const lastId = Job.data[Job.data.length - 1].id || 1;
+
+        Job.data.push({
+          id: lastId + 1,
+          name: req.body.name,
+          "daily-hours": req.body["daily-hours"],
+          "total-hours": req.body["total-hours"],
+          created_at: Date.now(),
+        })
+        return res.redirect('/')
       },
   },
   services: {
@@ -67,20 +82,8 @@ const Job = {
 }
 
 routes.get('/', Job.controllers.index)
-routes.get('/job', (request, response) => response.render(`${views}job`))
-routes.post('/job', (request, response) => {
-
-  const lastId = jobs[jobs.length - 1].id || 1;
-
-  jobs.push({
-    id: lastId + 1,
-    name: request.body.name,
-    "daily-hours": request.body["daily-hours"],
-    "total-hours": request.body["total-hours"],
-    created_at: Date.now(),
-  })
-  return response.redirect('/')
-})
+routes.get('/job', Job.controllers.create)
+routes.post('/job', Job.controllers.save)
 routes.get('/job/edit', (request, response) => response.render(`${views}job-edit`))
 routes.get('/profile', (request, response) => response.render(`${views}profile`, { profile }))
 
