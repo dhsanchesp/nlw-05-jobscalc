@@ -32,13 +32,11 @@
           <img id="logo" src="/images/logo.svg" alt="Logo" />
           <span id="notification">
             <img src="/images/alert-octagon.svg" alt="Alerta" />
-            Você tem 2 horas livres no seu dia
+            Você tem <%= freeHours %>  horas livres no seu dia
           </span>
           <a href="/profile" id="avatar-profile">
             <p><%= profile.name %><span>Ver perfil</span></p>
-            <img
-              src="<%= profile.avatar %> "
-            />
+            <img src="<%= profile.avatar %>" alt="Avatar" />
           </a>
         </section>
 
@@ -49,15 +47,15 @@
 
           <div class="info">
             <div class="total">
-              <strong><%= jobs.length %></strong>
+              <strong><%= statusCount.total %></strong>
               Projetos ao total
             </div>
             <div class="in-progress">
-              <strong>7</strong>
+              <strong><%= statusCount.inprogress %></strong>
               Em andamento
             </div>
             <div class="finished">
-              <strong>4</strong>
+              <strong><%= statusCount.done %></strong>
               Encerrados
             </div>
           </div>
@@ -79,7 +77,7 @@
 
           <% jobs.forEach((job) => { %> 
 
-          <div class="card <%= job.status %> " data-id="<%= job.id %>">
+          <div class="card <%= job.status %>" data-id="<%= job.id %>">
             <div class="id column"><%= job.id %></div>
             <div class="name column">
               <%= job.name %>
@@ -87,7 +85,7 @@
             <div class="deadline column">
               <span>Prazo</span>
               <p>
-                <% if (job.status === 'progress') { %> 
+                <% if (job.status === 'inprogress') { %> 
                     <%= job.remaining %>  dias para a entrega
                 <% } else { %> 
                     Prazo encerrado

@@ -28,8 +28,8 @@
   --color-delete: #EB3B35; 
   --color-save: #36B336;
   
-  --color-badge-progress-text: var(--color-save);
-  --color-badge-progress-background: #E8F8E8;
+  --color-badge-inprogress-text: var(--color-save);
+  --color-badge-inprogress-background: #E8F8E8;
   --color-badge-done-text: var(--color-delete);
   --color-badge-done-background:#FAECEB;
 

@@ -26,9 +26,9 @@
   
 }
 
-.progress .badge{
-  background: var(--color-badge-progress-background);
-  color: var(--color-badge-progress-text);
+.inprogress .badge{
+  background: var(--color-badge-inprogress-background);
+  color: var(--color-badge-inprogress-text);
 }
 
 .done .badge {

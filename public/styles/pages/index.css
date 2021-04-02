@@ -205,7 +205,7 @@ main {
   color: var(--color-card-label);
 }
 
-.progress .column p {
+.inprogress .column p {
   font-weight: 600;
 }
 
