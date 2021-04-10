@@ -1,15 +1,5 @@
 const Database = require('../db/config')
 
-let data = {
-    name: "Daniel Sanches",
-    avatar: "https://github.com/dhsanchesp.png",
-    "monthly-budget": 5400,
-    "days-per-week": 5,
-    "hours-per-day": 5,
-    "vacation-per-year": 4,
-    "value-hour": 75
-};
-
 module.exports = {
     async get() {
         const db = await Database()
@@ -18,7 +8,7 @@ module.exports = {
 
         await db.close()
 
-        data = {
+        const data = {
             name: profileData.name,
             avatar: profileData.avatar,
             "monthly-budget": profileData.monthly_budget,
@@ -31,7 +21,18 @@ module.exports = {
         return data;
     },
 
-    update(newData) {
-        data = newData;
+    async update(newData) {
+        const db = await Database()
+
+        db.run(`UPDATE profile SET 
+        name = "${newData.name}",
+        avatar = "${newData.avatar}",
+        monthly_budget =${newData["monthly-budget"]},
+        days_per_week = ${newData["days-per-week"]},
+        hours_per_day = ${newData["hours-per-day"]},
+        vacation_per_year = ${newData["vacation-per-year"]},
+        value_hour = ${newData["value-hour"]}`);
+
+        await db.close()
     }
 }
