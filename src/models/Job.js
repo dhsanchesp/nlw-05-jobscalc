@@ -19,14 +19,18 @@ let data = [
 
 module.exports = {
     get() {
-        return data;
+        return data
     },
 
     update(newJobs) {
-        data = newJobs;
+        data = newJobs
     },
 
     delete(jobId) {
         data = data.filter(job => Number(job.id) !== Number(jobId))
+    },
+
+    create(newJob) {
+        data.push(newJob)
     }
 }
