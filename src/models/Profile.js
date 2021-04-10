@@ -1,3 +1,4 @@
+const Database = require('../db/config')
 
 let data = {
     name: "Daniel Sanches",
@@ -10,7 +11,23 @@ let data = {
 };
 
 module.exports = {
-    get() {
+    async get() {
+        const db = await Database()
+
+        const profileData = await db.get(`SELECT * FROM profile`)
+
+        await db.close()
+
+        data = {
+            name: profileData.name,
+            avatar: profileData.avatar,
+            "monthly-budget": profileData.monthly_budget,
+            "days-per-week": profileData.days_per_week,
+            "hours-per-day": profileData.hours_per_day,
+            "vacation-per-year": profileData.vacation_per_year,
+            "value-hour": profileData.value_hour
+        };
+
         return data;
     },
 

@@ -1,8 +1,8 @@
 const Profile = require('../models/Profile')
 
 module.exports = {
-    index(req, res) {
-        return res.render('profile', { profile: Profile.get() })
+    async index(req, res) {
+        return res.render('profile', { profile: await Profile.get() })
     },
 
     update(req, res) {
