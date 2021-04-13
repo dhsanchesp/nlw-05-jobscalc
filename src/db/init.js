@@ -16,7 +16,6 @@ const initDB = {
         await db.run(loadData.insertJob02());
 
         await db.close()
-
     }
 }
 
